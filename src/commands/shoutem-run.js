@@ -42,7 +42,7 @@ export default async function shoutemRun(platform, appId, options = {}) {
   const platformPath =
     options.mobileApp ?
     null :
-    options.platformBuild || getPlatformBuildPath(path.join(__dirname, '..', '..'));
+    options.platformBuild || getPlatformBuildPath();
 
   // read global mobile-app config used for current server env
   const mobileAppConfig = await readJsonFile(await mobileAppConfigPath()) || {};
@@ -72,7 +72,7 @@ export default async function shoutemRun(platform, appId, options = {}) {
   }
 
   Object.assign(mobileAppConfig, {
-      platform,
+      platform: platform,
       appId,
       serverApiEndpoint: url.parse(cliUrls.appManager).hostname,
       legacyApiEndpoint: url.parse(cliUrls.legacyService).hostname,

@@ -4,8 +4,10 @@
 # ignore all logs
 *.log
 
-# ignore transpiled code
-/build
+# ignore source code
+/src
+
+!/build
 
 # OSX stuff
 .DS_Store

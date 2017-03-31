@@ -1,23 +1,34 @@
-#!/usr/bin/env node
+require('yargonaut')
+  .helpStyle('green.underline')
+  .errorsStyle('red.bold');
 
-const semver = require('semver');
+import 'colors';
+import yargs from 'yargs';
+import { version } from '../package.json';
+import apiUrls from '../config/services';
+import autoUpdate from './commands/update-cli';
 
-const presets = [];
-const plugins = ['transform-object-rest-spread', 'transform-async-to-generator'];
+(async () => {
+  if (await autoUpdate()) {
+    return null;
+  }
 
-if (semver.lt(process.versions.node, '6.0.0')) {
-  presets.push('full-node4');
-} else if (semver.lt(process.versions.node, '7.0.0')) {
-  presets.push('node6');
-} else {
-  presets.push('node7');
-}
+  const cli = yargs.usage('Usage: shoutem [command] [-h]')
+    .option('version', {
+      alias: 'v',
+      description: 'Show version number'
+    })
+    .commandDir('cli')
+    .strict()
+    .help()
+    .epilog(`If you don't have a developer account, you can register at ${apiUrls.appBuilder.bold}.\n\n`+
+      `More detailed reference on how to use CLI can be found on the Developer Portal: ${"https://shoutem.github.io/docs/extensions/reference/cli".bold}`)
+    .alias('help', 'h');
 
-require('babel-register')({
-  presets,
-  plugins,
-  ignore: false,
-  only: ['config', 'src', 'templates']
-});
-
-require('./cli.js');
+  const argv = cli.argv;
+  if (argv.version) {
+    console.log(require('../package.json').version);
+  } else if (argv._.length === 0){
+    cli.showHelp();
+  }
+})();

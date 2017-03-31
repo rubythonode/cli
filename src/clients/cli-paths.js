@@ -1,6 +1,7 @@
 import os from 'os';
 import path from 'path';
 import mkdirp from 'mkdirp-promise';
+import findNodeModules from 'find-node-modules';
 import { getHostEnvName } from './server-env';
 
 export async function localStoragePath() {
@@ -42,8 +43,8 @@ export async function getPlatformsPath() {
   return platformsPath;
 }
 
-export function getPlatformBuildPath(cliRoot) {
-  return path.join(cliRoot, 'node_modules', '@shoutem', 'platform-build');
+export function getPlatformBuildPath() {
+  return path.join(findNodeModules()[0], '@shoutem', 'platform-build');
 }
 
 export async function getPlatformConfigPath() {
